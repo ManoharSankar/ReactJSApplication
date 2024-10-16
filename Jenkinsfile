@@ -21,10 +21,10 @@ pipeline {
         stage('Build') {
             steps {
                 // Execute the build.sh script
-                script{
+                sh """
                     chmod +x build.sh
                     ./build.sh
-                }
+                """
                 
             }
         }
