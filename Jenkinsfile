@@ -4,11 +4,10 @@ pipeline {
     environment {
         // Set your Docker Hub credentials
         DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'  // Replace with Jenkins credential ID
-        DOCKER_HUB_REPO = 'your_dockerhub_repo'     // Replace with your Docker Hub repository
-        IMAGE_NAME = 'your_image_name'              // Replace with your image name
-        GIT_REPO = 'https://github.com/your/repo.git' // Replace with your GitHub repo URL
-        BRANCH = $Branch                              // Replace with your branch name
-    }
+        DOCKER_HUB_REPO = 'reactapp-dev'     // Replace with your Docker Hub repository
+        IMAGE_NAME = 'reactjsapplication-react-app'              // Replace with your image name
+        GIT_REPO = 'https://github.com/ManoharSankar/ReactJSApplication.git' // Replace with your GitHub repo URL
+        BRANCH = '$(env.GIT_BRANCH)'                              // Replace with your branch name
 
     stages {
         stage('Clone Repository') {
