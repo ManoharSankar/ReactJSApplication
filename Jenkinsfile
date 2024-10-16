@@ -7,7 +7,7 @@ pipeline {
         DOCKER_HUB_REPO = 'reactapp-dev'     // Replace with your Docker Hub repository
         IMAGE_NAME = 'reactjsapplication-react-app'              // Replace with your image 
 
-    stages 
+    stages {
         stage('Build') {
             steps {
                 // Execute the build.sh script
