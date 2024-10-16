@@ -6,7 +6,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'  // Replace with Jenkins credential ID
         DOCKER_HUB_REPO = 'reactapp-dev'     // Replace with your Docker Hub repository
         IMAGE_NAME = 'reactjsapplication-react-app'              // Replace with your image 
-
+    }
     stages {
         stage('Build') {
             steps {
@@ -14,21 +14,9 @@ pipeline {
                 sh """
                     chmod +x build.sh
                     ./build.sh
-                """
-                
+                """           
             }
         }
-
-/*        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build Docker image
-                    sh """
-                    docker build -t ${DOCKER_HUB_REPO}/${IMAGE_NAME}:${BUILD_NUMBER} .
-                    """
-                }
-            }
-        }*/
 
         stage('Push Docker Image') {
             steps {
@@ -51,7 +39,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             script {
@@ -94,5 +81,4 @@ pipeline {
             )
         }
     }
-}
 }
