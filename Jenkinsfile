@@ -42,37 +42,35 @@ pipeline {
             script{
                 currentBuild.Status="SUCCESS"
             }
-            emailext{
+            emailext(
                 to: 'manoharsankar93@gmail.com',
-                 subject: "Docker Build and Deployment Success",
-                 body: """
-                 The Docker images were successfully built and pushed.
-                 - **Build Number**: ${env.BUILD_NUMBER}
-                 - **Build Status**: ${currentBuild.result}
-                 - **Job Name**: ${env.JOB_NAME}
-                 - **Build URL**: ${env.BUILD_URL}
-                 """,
+                subject: "Docker Build and Deployment Success",
+                body: """
+                The Docker images were successfully built and pushed.
+                - **Build Number**: ${env.BUILD_NUMBER}
+                - **Build Status**: ${currentBuild.result}
+                - **Job Name**: ${env.JOB_NAME}
+                - **Build URL**: ${env.BUILD_URL}
+                """,
             attachLog: true
-
-            } 
+            )
         }
         failure {
             script{
                 currentBuild.Status="FAILURE"
             }
-            emailext{
+            emailext(
                 to: 'manoharsankar93@gmail.com',
-                 subject: "Docker Build and Deployment Failed",
-                 body: """
-                 There was an error during the Docker build or deployment."
-                 - **Build Number**: ${env.BUILD_NUMBER}
-                 - **Build Status**: ${currentBuild.result}
-                 - **Job Name**: ${env.JOB_NAME}
-                 - **Build URL**: ${env.BUILD_URL}
-                 """,
+                subject: "Docker Build and Deployment Failed",
+                body: """
+                There was an error during the Docker build or deployment."
+                - **Build Number**: ${env.BUILD_NUMBER}
+                - **Build Status**: ${currentBuild.result}
+                - **Job Name**: ${env.JOB_NAME}
+                - **Build URL**: ${env.BUILD_URL}
+                """,
             attachLog: true
-
-            } 
+            )
         }
     }
 }
