@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the image name for the service to push (app service in this case)
-IMAGE_NAME="manoharms/reactapp-dev"
+IMAGE_NAME="manoharms/react-app"
 TAG="latest"
 
 # Log in to Docker Hub
