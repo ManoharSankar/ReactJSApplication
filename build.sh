@@ -1,5 +1,10 @@
 #!/bin/bash
 
+REACT_IMAGE="reactjsapplication-react-app"
+# Step 1: Remove existing images
+echo "Removing existing Docker images..."
+docker rmi -f $REACT_IMAGE:latest 
+
 # Define the Docker Compose file
 COMPOSE_FILE="docker-compose.yml"
 
