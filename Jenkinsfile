@@ -2,83 +2,43 @@ pipeline {
     agent any
 
     environment {
-        // Set your Docker Hub credentials
-        DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'  // Replace with Jenkins credential ID
-        DOCKER_HUB_REPO = 'reactapp-dev'     // Replace with your Docker Hub repository
-        IMAGE_NAME = 'reactjsapplication-react-app'              // Replace with your image 
+        DOCKERHUB_USERNAME = credentials('dockerhub-username')  // Jenkins credentials for Docker Hub
+        DOCKERHUB_PASSWORD = credentials('dockerhub-password')
     }
+
     stages {
         stage('Build') {
             steps {
-                // Execute the build.sh script
-                sh """
-                    chmod +x build.sh
-                    ./build.sh
-                """           
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
                 script {
-                    // Log in to Docker Hub and push the image
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
-                        sh """
-                        echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin
-                        docker push ${DOCKER_HUB_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
-                        """
-                    }
+                    // Run the build script
+                    sh 'chmod +x build.sh && ./build.sh'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                // Execute the deploy.sh script to pull the image and start the app with Docker Compose
-                sh './deploy.sh'
+                script {
+                    // Run the deploy script
+                    sh 'chmod +x deploy.sh && ./deploy.sh'
+                }
             }
         }
     }
+
     post {
+        always {
+            echo "Pipeline execution completed."
+        }
         success {
-            script {
-                currentBuild.result = 'SUCCESS'
-            }
-            emailext(
-                to: 'manoharsankar93@gmail.com',
-                subject: "Jenkins Build SUCCESS: ${currentBuild.fullDisplayName}",
-                body: """
-                The build was successful!
-
-                - **Build Number**: ${env.BUILD_NUMBER}
-                - **Build Status**: ${currentBuild.result}
-                - **Job Name**: ${env.JOB_NAME}
-                - **Build URL**: ${env.BUILD_URL}
-
-                Please check the details in Jenkins.
-                """,
-		attachLog: true
-            )
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Docker Compose Build and Deployment Success",
+                 body: "The Docker images were built and deployed successfully using Docker Compose and pushed to Docker Hub."
         }
         failure {
-            script {
-                currentBuild.result = 'FAILURE'
-            }
-            emailext(
-                to: 'manoharsankar93@gmail.com',
-                subject: "Jenkins Build FAILURE: ${currentBuild.fullDisplayName}",
-                body: """
-                The build failed.
-
-                - **Build Number**: ${env.BUILD_NUMBER}
-                - **Build Status**: ${currentBuild.result}
-                - **Job Name**: ${env.JOB_NAME}
-                - **Build URL**: ${env.BUILD_URL}
-
-                Please check the details in Jenkins.
-                """,
-		attachLog: true
-            )
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Docker Compose Build and Deployment Failed",
+                 body: "There was an error during the Docker Compose build or deployment process."
         }
     }
 }
