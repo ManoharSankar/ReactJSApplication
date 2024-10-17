@@ -1,9 +1,7 @@
 services:
   react-app:
     build:
-      context: .
-      dockerfile: dockerfile
-    image: reactjsapplication-react-app
+      context: ./react-app
     ports:
       - "80:80"
     networks:
