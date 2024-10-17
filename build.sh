@@ -2,33 +2,45 @@
 
 REACT_IMAGE="reactjsapplication-react-app"
 TAG="latest"
-REPO_NAME="manoharms/reactapp-dev"
-# Step 1: Remove existing images
-echo "Removing existing Docker images..."
-docker rmi -f $REACT_IMAGE:latest 
+REPO_NAME_DEV="manoharms/reactapp-dev"
+REPO_NAME_PROD="manoharms/reactapp-prod"
+BRANCH=$1  # First argument passed to the script (branch name)
+#COMPOSE_FILE="docker-compose.yml"
 
-# Define the Docker Compose file
-COMPOSE_FILE="docker-compose.yml"
+# Step 1: Remove old images based on the branch
+if [ "$BRANCH" == "dev" ]; then
+    echo "Removing old dev image..."
+    docker rmi -f $REACT_IMAGE:latest || true
+elif [ "$BRANCH" == "main" ]; then
+    echo "Removing old prod image..."
+    docker rmi -f $REACT_IMAGE:latest || true
+fi
+
+# Step 2: Build the Docker image using Docker Compose
+echo "Building the Docker image for branch: $BRANCH..."
+
+if [ "$BRANCH" == "dev" ]; then
+    docker-compose build
+    echo "Tagging the image as $REACT_IMAGE:latest"
+    docker tag $REACT_IMAGE:latest $REPO_NAME_DEV:latest
+elif [ "$BRANCH" == "main" ]; then
+    docker-compose build
+    echo "Tagging the image as $REACT_IMAGE:latest"
+    docker tag $REACT_IMAGE:latest $REPO_NAME_PROD:latest
+else
+    echo "Unknown branch. Exiting."
+    exit 1
+fi
+
+echo "Build completed."
 
 # Build the images using Docker Compose
-docker-compose -f $COMPOSE_FILE build
+#docker-compose -f $COMPOSE_FILE build
 
-if [ $? -eq 0 ]; then
-  echo "Docker images built successfully using Docker Compose."
-else
-  echo "Failed to build Docker images."
-  exit 1
-fi
-# Log in to Docker Hub
-echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-# Push the Docker image to Docker Hub
-docker tag $REACT_IMAGE $REPO_NAME:$TAG
-docker push $REPO_NAME:$TAG
-
-if [ $? -eq 0 ]; then
-  echo "Docker image pushed successfully: $REPO_NAME:$TAG"
-else
-  echo "Failed to push Docker image."
-  exit 1
-fi
+#if [ $? -eq 0 ]; then
+  #echo "Docker images built successfully using Docker Compose."
+#else
+  #echo "Failed to build Docker images."
+  #exit 1
+#fi
 
