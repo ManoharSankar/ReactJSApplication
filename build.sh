@@ -22,6 +22,7 @@ fi
 # Log in to Docker Hub
 echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 # Push the Docker image to Docker Hub
+docker tag $REACT_IMAGE $REPO_NAME:$TAG
 docker push $REPO_NAME:$TAG
 
 if [ $? -eq 0 ]; then
