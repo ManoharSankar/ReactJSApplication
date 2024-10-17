@@ -5,30 +5,49 @@ pipeline {
         DOCKERHUB_USERNAME = credentials('DOCKER_USERNAME') // Jenkins credentials
         DOCKERHUB_PASSWORD = credentials('DOCKER_PASS') // Jenkins credentials
     }
-
+    
     stages {
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
                 script {
-                    // Run build.sh with the current branch name
-                    if (env.BRANCH_NAME == 'dev') {
-                        sh './build.sh dev'
-                    } else if (env.BRANCH_NAME == 'main') {
-                        sh './build.sh main'
-                    }
+                    // Run build.sh to build Docker images using Docker Compose
+                    sh 'chmod +x build.sh && ./build.sh'
                 }
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Deploy to Docker Hub') {
+            when {
+                branch 'dev' // Only run this stage when on the 'dev' branch
+            }
             steps {
                 script {
-                    // Run deploy.sh with the current branch name
-                    if (env.BRANCH_NAME == 'dev') {
-                        sh './deploy.sh dev'
-                    } else if (env.BRANCH_NAME == 'main') {
-                        sh './deploy.sh main'
-                    }
+                    echo "Pushing to reactapp-dev registry"
+                    // Log in to Docker Hub
+                    sh '''
+                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                    docker tag reactjsapplication-react-app manoharms/reactapp-dev:latest
+                    docker push manoharms/reactapp-dev:latest
+                    chmod +x deploy.sh && ./deploy.sh
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                branch 'main' // Only run this stage when on the 'main' branch
+            }
+            steps {
+                script {
+                    echo "Pushing to reactapp-prod registry"
+                    // Log in to Docker Hub
+                    sh '''
+                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                    docker tag reactjsapplication-react-app manoharms/reactapp-prod:latest
+                    docker push manoharms/reactapp-prod:latest
+                    chmod +x deploy.sh && ./deploy.sh
+                    '''
                 }
             }
         }
