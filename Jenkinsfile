@@ -39,14 +39,14 @@ pipeline {
             echo "Pipeline execution completed."
         }
         success {
-            emailto: 'manoharsankar93@gmail.com',
-                subject: "Docker Build and Deployment Success",
-                body: "The Docker images were successfully built and pushed."
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Docker Build and Deployment Success",
+                 body: "The Docker images were successfully built and pushed."
         }
         failure {
-            emailto: 'manoharsankar93@gmail.com',
-                subject: "Docker Build and Deployment Failed",
-                body: "There was an error during the Docker build or deployment"
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Docker Build and Deployment Failed",
+                 body: "There was an error during the Docker build or deployment"
         }
     }
 }
