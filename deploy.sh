@@ -17,5 +17,7 @@ else
   echo "Failed to push Docker image."
   exit 1
 fi
+#Stop and remove containers
+docker-compose -f $COMPOSE_FILE down 
 #Running the containers
 docker-compose -f $COMPOSE_FILE up -d
