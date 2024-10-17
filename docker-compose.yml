@@ -2,8 +2,6 @@ services:
   react-app:
     build:
       context: ./react-app
-      dockerfile: Dockerfile
-    image: manoharms/react-app:latest  
     ports:
       - "80:80"
     networks:
