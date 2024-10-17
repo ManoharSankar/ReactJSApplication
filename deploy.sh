@@ -4,7 +4,7 @@ REACT_IMAGE="reactjsapplication-react-app"
 TAG="guvi"
 REPO_NAME_DEV="manoharms/reactapp-dev"
 REPO_NAME_PROD="manoharms/reactapp-prod"
-#COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE="docker-compose.yml"
 
 BRANCH=$1  # First argument passed to the script (branch name)
 
@@ -24,4 +24,4 @@ else
     exit 1
 fi
 #step2:Running the containers
-docker-compose  up -d
+docker-compose -f $COMPOSE_FILE  up -d
