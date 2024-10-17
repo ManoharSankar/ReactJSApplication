@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_USERNAME = credentials('DOCKER_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKER_PASS')
+    }
+
     stages {
         stage('Build') {
             steps {
