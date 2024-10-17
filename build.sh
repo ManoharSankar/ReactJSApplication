@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REACT_IMAGE="reactjsapplication-react-app"
-TAG="latest"
+TAG="guvi"
 REPO_NAME_DEV="manoharms/reactapp-dev"
 REPO_NAME_PROD="manoharms/reactapp-prod"
 BRANCH=$1  # First argument passed to the script (branch name)
@@ -10,10 +10,10 @@ BRANCH=$1  # First argument passed to the script (branch name)
 # Step 1: Remove old images based on the branch
 if [ "$BRANCH" == "dev" ]; then
     echo "Removing old dev image..."
-    docker rmi -f $REACT_IMAGE:latest || true
+    docker rmi -f $REACT_IMAGE:$TAG || true
 elif [ "$BRANCH" == "main" ]; then
     echo "Removing old prod image..."
-    docker rmi -f $REACT_IMAGE:latest || true
+    docker rmi -f $REACT_IMAGE:$TAG || true
 fi
 
 # Step 2: Build the Docker image using Docker Compose
@@ -21,12 +21,12 @@ echo "Building the Docker image for branch: $BRANCH..."
 
 if [ "$BRANCH" == "dev" ]; then
     docker-compose build
-    echo "Tagging the image as $REACT_IMAGE:latest"
-    docker tag $REACT_IMAGE:latest $REPO_NAME_DEV:latest
+    echo "Tagging the image as $REACT_IMAGE:$TAG"
+    docker tag $REACT_IMAGE:$TAG $REPO_NAME_DEV:$TAG
 elif [ "$BRANCH" == "main" ]; then
     docker-compose build
-    echo "Tagging the image as $REACT_IMAGE:latest"
-    docker tag $REACT_IMAGE:latest $REPO_NAME_PROD:latest
+    echo "Tagging the image as $REACT_IMAGE:$TAG"
+    docker tag $REACT_IMAGE:$TAG $REPO_NAME_PROD:$TAG
 else
     echo "Unknown branch. Exiting."
     exit 1

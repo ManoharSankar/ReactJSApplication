@@ -1,7 +1,7 @@
 #!/bin/bash
 #variables
 REACT_IMAGE="reactjsapplication-react-app"
-TAG="latest"
+TAG="guvi"
 REPO_NAME_DEV="manoharms/reactapp-dev"
 REPO_NAME_PROD="manoharms/reactapp-prod"
 #COMPOSE_FILE="docker-compose.yml"
@@ -14,11 +14,11 @@ echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-st
 
 # Step 2: Push the image to the correct registry based on the branch
 if [ "$BRANCH" == "dev" ]; then
-    echo "Pushing image to $REACT_IMAGE:latest"
-    docker push $REPO_NAME_DEV:latest
+    echo "Pushing image to $REACT_IMAGE:$TAG"
+    docker push $REPO_NAME_DEV:$TAG
 elif [ "$BRANCH" == "main" ]; then
-    echo "Pushing image to $REACT_IMAGE:latest"
-    docker push $REPO_NAME_PROD:latest
+    echo "Pushing image to $REACT_IMAGE:$TAG"
+    docker push $REPO_NAME_PROD:$TAG
 else
     echo "Unknown branch. Exiting."
     exit 1
