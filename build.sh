@@ -2,13 +2,10 @@
 
 REACT_IMAGE="reactjsapplication-react-app"
 TAG="latest"
-REPO_NAME="manoharms/reactapp-dev"
+COMPOSE_FILE="docker-compose.yml"
 # Step 1: Remove existing images
 echo "Removing existing Docker images..."
-docker rmi -f $REACT_IMAGE:latest 
-
-# Define the Docker Compose file
-COMPOSE_FILE="docker-compose.yml"
+docker rmi -f $REACT_IMAGE:$TAG 
 
 # Build the images using Docker Compose
 docker-compose -f $COMPOSE_FILE build
@@ -19,16 +16,5 @@ else
   echo "Failed to build Docker images."
   exit 1
 fi
-# Log in to Docker Hub
-echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-# Push the Docker image to Docker Hub
-docker tag $REACT_IMAGE $REPO_NAME:$TAG
-docker push $REPO_NAME:$TAG
 
-if [ $? -eq 0 ]; then
-  echo "Docker image pushed successfully: $REPO_NAME:$TAG"
-else
-  echo "Failed to push Docker image."
-  exit 1
-fi
 

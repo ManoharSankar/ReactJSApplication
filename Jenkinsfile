@@ -2,22 +2,24 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USERNAME = credentials('DOCKER_USERNAME') // Jenkins credentials for Docker Hub username
-        DOCKERHUB_PASSWORD = credentials('DOCKER_PASS') // Jenkins credentials for Docker Hub password
+        DOCKERHUB_USERNAME = credentials('DOCKER_USERNAME')  // Jenkins credentials for Docker Hub
+        DOCKERHUB_PASSWORD = credentials('DOCKER_PASS')
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
                 script {
+                    // Run the build script
                     sh 'chmod +x build.sh && ./build.sh'
-                    }
                 }
             }
         }
-        stage('Deploy to Docker Hub') {
+
+        stage('Deploy') {
             steps {
                 script {
+                    // Run the deploy script
                     sh 'chmod +x deploy.sh && ./deploy.sh'
                 }
             }
@@ -29,14 +31,14 @@ pipeline {
             echo "Pipeline execution completed."
         }
         success {
-            mail to: 'your-email@example.com',
-                 subject: "Docker Build and Deployment Success",
-                 body: "The Docker images were successfully built and pushed."
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Docker Compose Build and Deployment Success",
+                 body: "The Docker images were built and deployed successfully using Docker Compose and pushed to Docker Hub."
         }
         failure {
-            mail to: 'your-email@example.com',
-                 subject: "Docker Build and Deployment Failed",
-                 body: "There was an error during the Docker build or deployment."
+            mail to: 'manoharsankar@gmail.com',
+                 subject: "Docker Compose Build and Deployment Failed",
+                 body: "There was an error during the Docker Compose build or deployment process."
         }
     }
 }
