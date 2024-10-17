@@ -4,6 +4,9 @@
 IMAGE_NAME="manoharms/reactapp-dev"
 TAG="latest"
 COMPOSE_FILE="docker-compose.yml"
+#Running the containers
+docker-compose -f $COMPOSE_FILE up -d
+
 # Log in to Docker Hub
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
 # Push the Docker image to Docker Hub
@@ -15,5 +18,3 @@ else
   echo "Failed to push Docker image."
   exit 1
 fi
-#Running the containers
-docker-compose  $COMPOSE_FILE up -d
