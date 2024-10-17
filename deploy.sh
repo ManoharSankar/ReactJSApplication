@@ -5,8 +5,7 @@ IMAGE_NAME="manoharms/react-app"
 TAG="latest"
 
 # Log in to Docker Hub
-docker login $DOCKER_CREDENTIALS 
-
+docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
 # Push the Docker image to Docker Hub
 docker push $IMAGE_NAME:$TAG
 
