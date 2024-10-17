@@ -12,3 +12,17 @@ else
   echo "Failed to build Docker images."
   exit 1
 fi
+#IMAGE_NAME="reactjsapplication-react-app"
+#TAG="latest"
+# Log in to Docker Hub
+#docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
+# Push the Docker image to Docker Hub
+#docker push $IMAGE_NAME:$TAG
+
+#if [ $? -eq 0 ]; then
+#  echo "Docker image pushed successfully: $IMAGE_NAME:$TAG"
+#else
+ # echo "Failed to push Docker image."
+  #exit 1
+#fi
+
