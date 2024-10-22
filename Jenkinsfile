@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKERHUB_USER = credentials('DOCKER_USERNAME') 
         DOCKERHUB_PASS = credentials('DOCKER_PASS')
-        SSH_KEY = credentials('ec2-ssh-key')
         BRANCH_NAME="${env.GIT_BRANCH}"
  
     }
