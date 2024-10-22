@@ -34,13 +34,20 @@ pipeline {
             }
         }
     }
-
     post {
+        always {
+            // Clean workspace after the build, regardless of the result
+            cleanWs()
+        }
         success {
-            echo "Pipeline completed successfully."
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Build Successful: ${env.JOB_NAME}",
+                 body: "The build ${env.BUILD_NUMBER} was successful!"
         }
         failure {
-            echo "Pipeline failed."
+            mail to: 'manoharsankar93@gmail.com',
+                 subject: "Build Failed: ${env.JOB_NAME}",
+                 body: "The build ${env.BUILD_NUMBER} failed. Please check the logs."
         }
     }
 }
