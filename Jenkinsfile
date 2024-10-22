@@ -2,9 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = credentials('dockerhub-username') 
-        DOCKERHUB_PASS = credentials('dockerhub-password')
-        SSH_KEY = credentials('ec2-ssh-key') 
+        DOCKERHUB_USER = credentials('DOCKER_USERNAME') 
+        DOCKERHUB_PASS = credentials('DOCKER_PASS')
+        SSH_KEY = credentials('ec2-ssh-key')
+        BRANCH_NAME="${env.GIT_BRANCH}"
+ 
     }
 
     stages {
@@ -12,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh './build.sh ${env.BRANCH_NAME}'
+                    sh './build.sh ${BRANCH_NAME}'
                 }
             }
         }

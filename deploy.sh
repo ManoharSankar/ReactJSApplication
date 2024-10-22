@@ -4,7 +4,7 @@ set -e
 
 BRANCH_NAME=$1
 SERVER_USER=ec2-user
-SERVER_IP=172.31.13.215
+SERVER_IP=3.111.168.110
 SSH_KEY_PATH=~/.ssh/id_rsa
 DOCKER_DEV_REPO=manoharms/react-app-dev:dev-latest
 DOCKER_PROD_REPO=manoharms/react-app-prod:prod-latest
