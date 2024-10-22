@@ -1,20 +1,18 @@
-version: '3'
+version: '3.8'
+
 services:
-  react-app:
-    build:
-      context: ./react-app
+  reactapp:
+    image: ${DOCKER_IMAGE}
     ports:
       - "80:80"
-    networks:
-      - my-network
-
-  express-server:
-    build:
-      context: ./express-server
-    ports:
-      - "3001:3001"
-    networks:
-      - my-network
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   prometheus:
     image: prom/prometheus
@@ -22,21 +20,11 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    networks:
-      - my-network
-    depends_on:
-      - express-server
 
   grafana:
     image: grafana/grafana
     ports:
-      - "3002:3000"
-    networks:
-      - my-network
+      - "3000:3000"
     depends_on:
       - prometheus
-
-networks:
-  my-network:
-    driver: bridge
 

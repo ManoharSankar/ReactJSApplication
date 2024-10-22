@@ -2,105 +2,65 @@ pipeline {
     agent any
 
     environment {
-        // Set your Docker Hub credentials
-        DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'  // Replace with Jenkins credential ID
-        DOCKER_HUB_REPO = 'reactapp-dev'     // Replace with your Docker Hub repository
-        IMAGE_NAME = 'reactjsapplication-react-app'              // Replace with your image name
-        GIT_REPO = 'https://github.com/ManoharSankar/ReactJSApplication.git' // Replace with your GitHub repo URL
-        BRANCH = '$(env.GIT_BRANCH)'                              // Replace with your branch name
+        DOCKERHUB_USER = credentials('dockerhub-username') 
+        DOCKERHUB_PASS = credentials('dockerhub-password')
+        SSH_KEY = credentials('ec2-ssh-key')
+    }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                // Clone the GitHub repository
-                git branch: "${BRANCH}", url: "${GIT_REPO}"
+                checkout scm
             }
         }
-
-        stage('Build') {
-            steps {
-                // Execute the build.sh script
-                sh """
-                    chmod +x build.sh
-                    ./build.sh
-                """
-                
-            }
-        }
-
-/*        stage('Build Docker Image') {
+        
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
-                    sh """
-                    docker build -t ${DOCKER_HUB_REPO}/${IMAGE_NAME}:${BUILD_NUMBER} .
-                    """
+                    sh './build.sh ${env.BRANCH_NAME}'
                 }
             }
-        }*/
-
-        stage('Push Docker Image') {
+        }
+        
+        stage('Deploy Application') {
+            when {
+                branch 'dev'
+            }
             steps {
                 script {
-                    // Log in to Docker Hub and push the image
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
-                        sh """
-                        echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin
-                        docker push ${DOCKER_HUB_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
-                        """
-                    }
+                    sh './deploy.sh dev'
+                }
+            }
+        }
+        
+        stage('Deploy Application to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    sh './deploy.sh main'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Monitor Health') {
             steps {
-                // Execute the deploy.sh script to pull the image and start the app with Docker Compose
-                sh './deploy.sh'
+                script {
+                    echo "Health check initiated for branch ${env.BRANCH_NAME}"
+                    // Add Prometheus/Grafana monitoring steps here if necessary
+                }
             }
         }
     }
 
     post {
         success {
-            script {
-                currentBuild.result = 'SUCCESS'
-            }
-            emailext(
-                to: 'manoharsankar93@gmail.com',
-                subject: "Jenkins Build SUCCESS: ${currentBuild.fullDisplayName}",
-                body: """
-                The build was successful!
-
-                - **Build Number**: ${env.BUILD_NUMBER}
-                - **Build Status**: ${currentBuild.result}
-                - **Job Name**: ${env.JOB_NAME}
-                - **Build URL**: ${env.BUILD_URL}
-
-                Please check the details in Jenkins.
-                """,
-		attachLog: true
-            )
+            echo "Pipeline completed successfully."
         }
         failure {
-            script {
-                currentBuild.result = 'FAILURE'
-            }
-            emailext(
-                to: 'manoharsankar93@gmail.com',
-                subject: "Jenkins Build FAILURE: ${currentBuild.fullDisplayName}",
-                body: """
-                The build failed.
-
-                - **Build Number**: ${env.BUILD_NUMBER}
-                - **Build Status**: ${currentBuild.result}
-                - **Job Name**: ${env.JOB_NAME}
-                - **Build URL**: ${env.BUILD_URL}
-
-                Please check the details in Jenkins.
-                """,
-		attachLog: true
-            )
+            echo "Pipeline failed."
         }
     }
 }
+
