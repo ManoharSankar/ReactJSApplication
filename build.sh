@@ -2,11 +2,12 @@
 
 set -x
 
-BRANCH_NAME="$1"
-BRANCH_NAME="${BRANCH_NAME#origin/}"
 DOCKERHUB_USER=manoharms
 DOCKER_DEV_REPO=${DOCKERHUB_USER}/react-app-dev
 DOCKER_PROD_REPO=${DOCKERHUB_USER}/react-app-prod
+BRANCH_NAME=$1
+echo $BRANCH_NAME
+BRANCH_NAME=${BRANCH_NAME#origin/}
 
  #echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
 

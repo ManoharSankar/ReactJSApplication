@@ -4,15 +4,10 @@ pipeline {
     environment {
         DOCKERHUB_USER = credentials('dockerhub-username') 
         DOCKERHUB_PASS = credentials('dockerhub-password')
-        SSH_KEY = credentials('ec2-ssh-key')
+        SSH_KEY = credentials('ec2-ssh-key') 
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         
         stage('Build Docker Image') {
             steps {
@@ -48,7 +43,7 @@ pipeline {
             steps {
                 script {
                     echo "Health check initiated for branch ${env.BRANCH_NAME}"
-                    // Add Prometheus/Grafana monitoring steps here if necessary
+                    // Add Prometheus/Grafana monitoring steps here if necessary of reactapp
                 }
             }
         }
