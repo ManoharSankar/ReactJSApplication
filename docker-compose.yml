@@ -5,6 +5,8 @@ services:
     image: ${DOCKER_IMAGE}
     ports:
       - "80:80"
+    my-network:
+    driver: bridge
     environment:
       - NODE_ENV=${NODE_ENV}
     restart: always
@@ -19,15 +21,15 @@ services:
       context: ./express-server
     ports:
       - "3001:3001"
-    networks:
-      - my-network
+    my-network:
+    driver: bridge
 
   node-exporter:
     image: prom/node-exporter
     ports:
       - "9100:9100"
-    networks:
-      - my-network
+    my-network:
+    driver: bridge
 
   prometheus:
     image: prom/prometheus
@@ -35,11 +37,18 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    my-network:
+    driver: bridge
 
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    my-network:
+    driver: bridge
     depends_on:
       - prometheus
 
+networks:
+  my-network:
+    driver: bridge
