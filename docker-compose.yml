@@ -39,6 +39,9 @@ services:
       - "9090:9090"
     my-network:
     driver: bridge
+    depends_on:
+      - express-server
+      - node-exporter
 
   grafana:
     image: grafana/grafana
