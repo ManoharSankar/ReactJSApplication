@@ -3,6 +3,7 @@
 set -x
 
 BRANCH_NAME=$1
+BRANCH_NAME="${BRANCH_NAME#origin/}"
 SERVER_USER=ec2-user
 SERVER_IP=3.111.168.110
 SSH_KEY_PATH= ~/.ssh/id_rsa
