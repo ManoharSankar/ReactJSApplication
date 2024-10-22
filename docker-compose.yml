@@ -5,8 +5,8 @@ services:
     image: ${DOCKER_IMAGE}
     ports:
       - "80:80"
-    my-network:
-    driver: bridge
+    networks:
+      - my-network
     environment:
       - NODE_ENV=${NODE_ENV}
     restart: always
@@ -15,21 +15,21 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
- 
+
   express-server:
     build:
       context: ./express-server
     ports:
       - "3001:3001"
-    my-network:
-    driver: bridge
+    networks:
+      - my-network
 
   node-exporter:
     image: prom/node-exporter
     ports:
       - "9100:9100"
-    my-network:
-    driver: bridge
+    networks:
+      - my-network
 
   prometheus:
     image: prom/prometheus
@@ -37,8 +37,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    my-network:
-    driver: bridge
+    networks:
+      - my-network
     depends_on:
       - express-server
       - node-exporter
@@ -46,12 +46,11 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3000:3000"
-    my-network:
-    driver: bridge
+      - "3002:3000"
+    networks:
+      - my-network
     depends_on:
       - prometheus
-
 networks:
   my-network:
-    driver: bridge
+    driver: bridge 
