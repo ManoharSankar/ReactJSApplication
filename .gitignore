@@ -1,0 +1,5 @@
+# Node.js dependencies
+node_modules/
+# Docker-related files
+docker-compose.override.yml
+.dockerignore
