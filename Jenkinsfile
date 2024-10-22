@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKERHUB_USER = credentials('DOCKER_USERNAME') 
         DOCKERHUB_PASS = credentials('DOCKER_PASS')
-        SSH_KEY = credentials('ec2-ssh-key')
         BRANCH_NAME="${env.GIT_BRANCH}"
  
     }
@@ -20,27 +19,12 @@ pipeline {
         }
         
         stage('Deploy Application') {
-            when {
-                branch 'dev'
-            }
             steps {
                 script {
-                    sh './deploy.sh dev'
+                    sh './deploy.sh ${BRANCH_NAME}'
                 }
             }
         }
-        
-        stage('Deploy Application to Production') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    sh './deploy.sh main'
-                }
-            }
-        }
-
         stage('Monitor Health') {
             steps {
                 script {
