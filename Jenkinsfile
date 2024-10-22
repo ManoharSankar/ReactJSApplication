@@ -20,27 +20,12 @@ pipeline {
         }
         
         stage('Deploy Application') {
-            when {
-                branch 'dev'
-            }
             steps {
                 script {
-                    sh './deploy.sh dev'
+                    sh './deploy.sh ${BRANCH_NAME}'
                 }
             }
         }
-        
-        stage('Deploy Application to Production') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    sh './deploy.sh main'
-                }
-            }
-        }
-
         stage('Monitor Health') {
             steps {
                 script {
