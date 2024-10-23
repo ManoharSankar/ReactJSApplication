@@ -43,5 +43,7 @@ app.listen(3001, () => {
   console.log('Express server running on port 3001');
 });
 
-
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 

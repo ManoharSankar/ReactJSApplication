@@ -1,0 +1,16 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:465'
+  smtp_from: 'manoharsankar93@@gmail.com'
+  smtp_auth_username: 'manoharsankar93@gmail.com'
+  smtp_auth_password: 'oach zjyu iymt svmt'
+
+route:
+  group_by: ['alertname']
+  receiver: 'email-notifications'
+
+receivers:
+  - name: 'email-notifications'
+    email_configs:
+      - to: 'manoharsankar93@gmail.com'
+        send_resolved: true
+

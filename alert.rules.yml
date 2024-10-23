@@ -1,0 +1,12 @@
+groups:
+  - name: react-app-alerts
+    rules:
+      - alert: ReactAppDown
+        expr: up{job="express-server"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "React Application is down"
+          description: "The React application is down for more than 1 minute."
+
