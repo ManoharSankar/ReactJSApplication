@@ -51,7 +51,6 @@ services:
     depends_on:
       - express-server
       - node-exporter
-      - alertmanager
 
   grafana:
     image: grafana/grafana
