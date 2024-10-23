@@ -31,6 +31,15 @@ services:
     networks:
       - my-network
 
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+    - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+    - "9093:9093"
+    networks:
+      - my-network
+
   prometheus:
     image: prom/prometheus
     volumes:
@@ -42,6 +51,7 @@ services:
     depends_on:
       - express-server
       - node-exporter
+      - alertmanager
 
   grafana:
     image: grafana/grafana
